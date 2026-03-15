@@ -10,17 +10,15 @@ export default function ThreadsSniperLanding() {
   const handleWaitlist = () => {
     if (!name.trim() || !email.includes("@")) return;
     setSubmitting(true);
-    // Submit to Google Form via no-cors fetch
-    const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdHx5kf3-OR-JKapnP14xWKzN9n3CLOsx22VkSuPGk1ydlAxA/formResponse";
-    const formData = new URLSearchParams();
-    formData.append("entry.2005620554", name);
-    formData.append("entry.1045781291", email);
-    fetch(formUrl, {
-      method: "POST",
-      body: formData,
-      mode: "no-cors",
-    }).catch(() => {});
-    // Show success after short delay (no-cors won't return a readable response)
+    // Submit to Google Form via Image beacon (bypasses CORS)
+    const baseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdHx5kf3-OR-JKapnP14xWKzN9n3CLOsx22VkSuPGk1ydlAxA/formResponse";
+    const params = new URLSearchParams({
+      "entry.2005620554": name,
+      "entry.1045781291": email,
+      "submit": "Submit",
+    });
+    const img = new Image();
+    img.src = baseUrl + "?" + params.toString();
     setTimeout(() => { setSubmitting(false); setSubmitted(true); }, 1000);
   };
 
