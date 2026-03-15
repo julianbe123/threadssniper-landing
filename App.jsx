@@ -22,7 +22,7 @@ export default function ThreadsSniperLanding() {
       form.action = formUrl;
       form.target = "hidden_iframe";
       // Google Form entry IDs — you may need to update these
-      const entries = { "entry.1036498498": name, "entry.1280408498": email };
+      const entries = { "entry.2005620554": name, "entry.1045781291": email };
       Object.entries(entries).forEach(([k, v]) => {
         const input = document.createElement("input");
         input.type = "hidden"; input.name = k; input.value = v;
