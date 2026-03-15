@@ -10,28 +10,17 @@ export default function ThreadsSniperLanding() {
   const handleWaitlist = () => {
     if (!name.trim() || !email.includes("@")) return;
     setSubmitting(true);
-    // Submit to Google Form via hidden iframe (works when deployed)
-    try {
-      const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdHx5kf3-OR-JKapnP14xWKzN9n3CLOsx22VkSuPGk1ydlAxA/formResponse";
-      const iframe = document.createElement("iframe");
-      iframe.style.display = "none";
-      iframe.name = "hidden_iframe";
-      document.body.appendChild(iframe);
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = formUrl;
-      form.target = "hidden_iframe";
-      // Google Form entry IDs — you may need to update these
-      const entries = { "entry.2005620554": name, "entry.1045781291": email };
-      Object.entries(entries).forEach(([k, v]) => {
-        const input = document.createElement("input");
-        input.type = "hidden"; input.name = k; input.value = v;
-        form.appendChild(input);
-      });
-      document.body.appendChild(form);
-      form.submit();
-      setTimeout(() => { document.body.removeChild(form); document.body.removeChild(iframe); }, 2000);
-    } catch (e) { /* silently fail in sandbox */ }
+    // Submit to Google Form via no-cors fetch
+    const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdHx5kf3-OR-JKapnP14xWKzN9n3CLOsx22VkSuPGk1ydlAxA/formResponse";
+    const formData = new URLSearchParams();
+    formData.append("entry.2005620554", name);
+    formData.append("entry.1045781291", email);
+    fetch(formUrl, {
+      method: "POST",
+      body: formData,
+      mode: "no-cors",
+    }).catch(() => {});
+    // Show success after short delay (no-cors won't return a readable response)
     setTimeout(() => { setSubmitting(false); setSubmitted(true); }, 1000);
   };
 
